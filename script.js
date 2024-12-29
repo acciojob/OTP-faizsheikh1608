@@ -2,25 +2,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputs = document.querySelectorAll(".code");
 
   inputs.forEach((input, index) => {
+    // Handle forward typing
     input.addEventListener("input", (e) => {
       const value = e.target.value;
 
-      if (value.length > 1) {
-        // If user pastes more than one character, take only the first character
-        e.target.value = value.charAt(0);
-      }
+      // Ensure only the first character is kept
+      e.target.value = value.slice(0, 1);
 
       if (value && index < inputs.length - 1) {
-        // Move to the next input if available
-        inputs[index + 1].focus();
+        inputs[index + 1].focus(); // Focus next input
       }
     });
 
+    // Handle backward navigation with Backspace
     input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !e.target.value && index > 0) {
-        // Move to the previous input if it's empty
-        inputs[index - 1].focus();
+      if (e.key === "Backspace" && index > 0 && !e.target.value) {
+        inputs[index - 1].focus(); // Focus previous input
       }
+    });
+
+    // Clear focus on page reload
+    input.addEventListener("focus", () => {
+      setTimeout(() => {
+        input.select();
+      }, 0);
     });
   });
 });
